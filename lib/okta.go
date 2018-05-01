@@ -435,7 +435,7 @@ func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
 		return sts.Credentials{}, "", errors.New("Failed to get shib credentials from your keyring.  Please make sure you have added shib credentials with `aws-okta add`")
 	}
 
-	
+
 	//Start JMA Code here
 	resp, err := soup.Get(idpentryurl)
 	if err != nil {
@@ -500,12 +500,12 @@ func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
   log.Debug("Step: 4")
 	samlSess := session.Must(session.NewSession())
 	svc := sts.New(samlSess)
-
+  
 	samlParams := &sts.AssumeRoleWithSAMLInput{
 		PrincipalArn:    aws.String(principal),
 		RoleArn:         aws.String(role),
 		SAMLAssertion:   aws.String(assertion),
-		DurationSeconds: aws.Int64(int64(14400)),
+		DurationSeconds: aws.Int64(int64(p.SessionDuration.Seconds())),
 	}
 
 	samlResp, err := svc.AssumeRoleWithSAML(samlParams)
