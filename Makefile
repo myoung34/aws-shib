@@ -32,12 +32,12 @@ clean:
 dist:
 	mkdir dist
 	govendor sync
-	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o dist/aws-okta-$(VERSION)-linux-amd64
+	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o dist/aws-shib-$(VERSION)-linux-amd64
 
 dist-mac:
 	mkdir dist
 	govendor sync
-	GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o dist/aws-okta-$(VERSION)-darwin-amd64
+	GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o dist/aws-shib-$(VERSION)-darwin-amd64
 
 gh-release:
 	go get -u github.com/aktau/github-release
