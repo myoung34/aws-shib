@@ -40,17 +40,17 @@ func add(cmd *cobra.Command, args []string) error {
 	}
 
 	// Ask username password from prompt
-	organization, err := lib.Prompt("Okta organization", false)
+	organization, err := lib.Prompt("Shib IDP URL for AWS", false)
 	if err != nil {
 		return err
 	}
 
-	username, err := lib.Prompt("Okta username", false)
+	username, err := lib.Prompt("Identikey username", false)
 	if err != nil {
 		return err
 	}
 
-	password, err := lib.Prompt("Okta password", true)
+	password, err := lib.Prompt("Identikey password", true)
 	if err != nil {
 		return err
 	}
@@ -68,9 +68,9 @@ func add(cmd *cobra.Command, args []string) error {
 	}
 
 	item := keyring.Item{
-		Key:   "okta-creds",
+		Key:   "shib-creds",
 		Data:  encoded,
-		Label: "okta credentials",
+		Label: "shib credentials",
 		KeychainNotTrustApplication: false,
 	}
 
