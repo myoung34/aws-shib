@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strings"
 )
@@ -59,7 +60,7 @@ func NewDuoClient(host, signature, callback string) *DuoClient {
 // call the callback url.
 //
 // TODO: Use a Context to gracefully shutdown the thing and have a nice timeout
-func (d *DuoClient) ChallengeU2f() (err error) {
+func (d *DuoClient) ChallengeU2f() (body []byte, err error) {
 	var sid, tx, txid, auth string
 
 	tx = strings.Split(d.Signature, ":")[0]
@@ -85,12 +86,12 @@ func (d *DuoClient) ChallengeU2f() (err error) {
 		return
 	}
 
-	err = d.DoCallback(auth)
+	body, err = d.DoCallback(auth)
 	if err != nil {
 		return
 	}
 
-	return
+	return body, err
 }
 
 // DoAuth sends a POST request to the Duo /frame/web/v1/auth endpoint.
@@ -228,7 +229,7 @@ func (d *DuoClient) DoStatus(txid, sid string) (auth string, err error) {
 //
 // The callback request requires the stateToken from Okta and a sig_response built
 // from the precedent requests.
-func (d *DuoClient) DoCallback(auth string) (err error) {
+func (d *DuoClient) DoCallback(auth string) (body []byte, err error) {
 	var app string
 	var req *http.Request
 
@@ -238,7 +239,7 @@ func (d *DuoClient) DoCallback(auth string) (err error) {
 
 	client := &http.Client{}
 
-	callbackData := "stateToken=" + d.StateToken + "&sig_response=" + sigResp
+	callbackData := "_eventId=proceed&sig_response=" + sigResp
 	req, err = http.NewRequest("POST", d.Callback, bytes.NewReader([]byte(callbackData)))
 	if err != nil {
 		return
@@ -251,10 +252,11 @@ func (d *DuoClient) DoCallback(auth string) (err error) {
 		return
 	}
 	defer res.Body.Close()
+	bytes, err := ioutil.ReadAll(res.Body)
 
 	if res.StatusCode != http.StatusOK {
 		err = fmt.Errorf("Prompt request failed: %d", res.StatusCode)
 		return
 	}
-	return
+	return bytes, err
 }
