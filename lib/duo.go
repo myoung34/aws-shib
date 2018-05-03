@@ -60,7 +60,7 @@ func NewDuoClient(host, signature, callback string) *DuoClient {
 // call the callback url.
 //
 // TODO: Use a Context to gracefully shutdown the thing and have a nice timeout
-func (d *DuoClient) ChallengeU2f() (body []byte, err error) {
+func (d *DuoClient) ChallengeU2f() (body []byte, newSessionCookie string, err error) {
 	var sid, tx, txid, auth string
 
 	tx = strings.Split(d.Signature, ":")[0]
@@ -86,12 +86,12 @@ func (d *DuoClient) ChallengeU2f() (body []byte, err error) {
 		return
 	}
 
-	body, err = d.DoCallback(auth)
+	body, newSessionCookie, err = d.DoCallback(auth)
 	if err != nil {
 		return
 	}
 
-	return body, err
+	return body, newSessionCookie, err
 }
 
 // DoAuth sends a POST request to the Duo /frame/web/v1/auth endpoint.
@@ -229,7 +229,7 @@ func (d *DuoClient) DoStatus(txid, sid string) (auth string, err error) {
 //
 // The callback request requires the stateToken from Okta and a sig_response built
 // from the precedent requests.
-func (d *DuoClient) DoCallback(auth string) (body []byte, err error) {
+func (d *DuoClient) DoCallback(auth string) (body []byte, newSessionCookie string, err error) {
 	var app string
 	var req *http.Request
 
@@ -253,10 +253,16 @@ func (d *DuoClient) DoCallback(auth string) (body []byte, err error) {
 	}
 	defer res.Body.Close()
 	bytes, err := ioutil.ReadAll(res.Body)
+	cookies := res.Cookies()
+	for _, cookie := range cookies {
+		if cookie.Name == "shib_idp_session" {
+			newSessionCookie = cookie.Value
+		}
+	}
 
 	if res.StatusCode != http.StatusOK {
 		err = fmt.Errorf("Prompt request failed: %d", res.StatusCode)
 		return
 	}
-	return bytes, err
+	return bytes, newSessionCookie, err
 }
