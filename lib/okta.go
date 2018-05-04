@@ -46,20 +46,6 @@ type OktaProvider struct {
 func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
 	log.Debug("using shib provider")
 	var oktaCreds OktaCreds
-	item, err := p.Keyring.Get("shib-creds")
-	if err != nil {
-		log.Debug("couldnt get shib creds from keyring: %s", err)
-		//Prompt for username/password
-		oktaCreds.Username, _ = Prompt("Identikey username", false)
-		oktaCreds.Password, _ = Prompt("Identikey password", true)
-		fmt.Println()
-	} else {
-
-		if err = json.Unmarshal(item.Data, &oktaCreds); err != nil {
-			return sts.Credentials{}, "", errors.New("Failed to get shib credentials from your keyring.  Please make sure you have added shib credentials with `aws-okta add`")
-		}
-	}
-
 	base, err := url.Parse(p.OktaAwsSAMLUrl)
 	if err != nil {
 		return sts.Credentials{}, "", errors.New("Unable to parse SAML URL")
@@ -101,6 +87,19 @@ func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
 	var inputs []soup.Root
 	if sessionInvalid {
 		//Session Token was invalid - start with authentication
+		item, err := p.Keyring.Get("shib-creds")
+		if err != nil {
+			log.Debug("couldnt get shib creds from keyring: %s", err)
+			//Prompt for username/password
+			oktaCreds.Username, _ = Prompt("Identikey username", false)
+			oktaCreds.Password, _ = Prompt("Identikey password", true)
+			fmt.Println()
+		} else {
+
+			if err = json.Unmarshal(item.Data, &oktaCreds); err != nil {
+				return sts.Credentials{}, "", errors.New("Failed to get shib credentials from your keyring.  Please make sure you have added shib credentials with `aws-okta add`")
+			}
+		}
 		inputs := doc.FindAll("input")
 		payload := url.Values{}
 		for _, input := range inputs {
