@@ -3,7 +3,8 @@
 `aws-shib` allows you to authenticate with AWS using your Shibboleth credentials.
 
 ## Installing
-For now, please download the relevant binary from the dist directory.  This will get better
+```bash
+ $ go get http://***REMOVED***/aws-shib```
 
 ## Usage
 
