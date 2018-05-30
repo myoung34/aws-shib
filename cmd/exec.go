@@ -73,12 +73,14 @@ func execRun(cmd *cobra.Command, args []string) error {
 		return ErrTooFewArguments
 	}
 
+	var command string
 	if len(commandPart) == 0 {
-		return ErrCommandMissing
+		command = os.Getenv("SHELL")
+	} else {
+		command = commandPart[0]
 	}
 
 	profile := args[0]
-	command := commandPart[0]
 
 	var commandArgs []string
 	if len(commandPart) > 1 {
