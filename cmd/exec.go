@@ -132,6 +132,7 @@ func execRun(cmd *cobra.Command, args []string) error {
 	}
 
 	env := environ(os.Environ())
+	env.Unset("AWS_SHIB_PROFILE")
 	env.Unset("AWS_ACCESS_KEY_ID")
 	env.Unset("AWS_SECRET_ACCESS_KEY")
 	env.Unset("AWS_CREDENTIAL_FILE")
@@ -143,6 +144,7 @@ func execRun(cmd *cobra.Command, args []string) error {
 		env.Set("AWS_REGION", region)
 	}
 
+	env.Set("AWS_SHIB_PROFILE", profile)
 	env.Set("AWS_ACCESS_KEY_ID", creds.AccessKeyID)
 	env.Set("AWS_SECRET_ACCESS_KEY", creds.SecretAccessKey)
 
