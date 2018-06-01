@@ -1,6 +1,6 @@
 package main
 
-import "github.com/segmentio/aws-okta/cmd"
+import "***REMOVED***/aws-shib/cmd"
 
 var (
 	// This is updated via linker flags

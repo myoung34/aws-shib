@@ -8,9 +8,9 @@ import (
 	"net/url"
 
 	"github.com/99designs/keyring"
-	"github.com/segmentio/aws-okta/lib"
 	"github.com/skratchdot/open-golang/open"
 	"github.com/spf13/cobra"
+	"***REMOVED***/aws-shib/lib"
 )
 
 // loginCmd represents the login command

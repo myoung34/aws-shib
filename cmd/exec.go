@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/99designs/keyring"
-	"github.com/segmentio/aws-okta/lib"
 	"github.com/spf13/cobra"
+	"***REMOVED***/aws-shib/lib"
 )
 
 var (
