@@ -16,6 +16,12 @@
 			"revisionTime": "2017-05-15T10:45:16Z"
 		},
 		{
+			"checksumSHA1": "6QFxc5pvZayU0fjrLmwt4Z3AjY0=",
+			"path": "github.com/anaskhan96/soup",
+			"revision": "cd07662ec9300d16d2ece1c24b0b29ad89f65ff4",
+			"revisionTime": "2018-03-28T12:36:31Z"
+		},
+		{
 			"checksumSHA1": "bD0oh9rHp+3ElrjWtaou004QTt8=",
 			"path": "github.com/aulanov/go.dbus",
 			"revision": "25c3068a42a0b50b877953fb249dbcffc6bd1bca",
@@ -300,5 +306,5 @@
 			"revisionTime": "2015-06-12T01:39:23Z"
 		}
 	],
-	"rootPath": "github.com/segmentio/aws-okta"
+	"rootPath": "***REMOVED***/aws-shib"
 }
