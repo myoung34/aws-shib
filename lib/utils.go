@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/segmentio/aws-okta/lib/saml"
 	"golang.org/x/net/html"
+	"***REMOVED***/icbs/aws-shib/lib/saml"
 )
 
 //TODO: Move those functions into saml package
