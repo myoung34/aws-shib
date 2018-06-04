@@ -2,6 +2,9 @@
 
 `aws-shib` allows you to authenticate with AWS using your Shibboleth credentials.
 
+## WARNING ##
+This utility uses web scraping to interact with the Shibboleth login screen and has only been tested on 1 implementation - use at your own risk
+
 ## Installing
 ```bash
  $ go get github.com/CUBoulder-OIT/aws-shib```
