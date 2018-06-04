@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"golang.org/x/net/html"
-	"***REMOVED***/aws-shib/lib/saml"
+	"github.com/CUBoulder-OIT/aws-shib/lib/saml"
 )
 
 //TODO: Move those functions into saml package
