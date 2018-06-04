@@ -8,7 +8,7 @@ import (
 
 	"github.com/99designs/keyring"
 	"github.com/spf13/cobra"
-	"***REMOVED***/icbs/aws-shib/lib"
+	"github.com/CUBoulder-OIT/aws-shib/lib"
 )
 
 // addCmd represents the add command

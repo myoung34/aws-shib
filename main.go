@@ -1,6 +1,6 @@
 package main
 
-import "***REMOVED***/icbs/aws-shib/cmd"
+import "github.com/CUBoulder-OIT/aws-shib/cmd"
 
 var (
 	// This is updated via linker flags

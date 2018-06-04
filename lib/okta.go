@@ -20,7 +20,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sts"
 	"golang.org/x/net/publicsuffix"
-	"***REMOVED***/icbs/aws-shib/lib/saml"
+	"github.com/CUBoulder-OIT/aws-shib/lib/saml"
 
 	"github.com/anaskhan96/soup"
 )
