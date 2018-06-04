@@ -4,7 +4,7 @@
 
 ## Installing
 ```bash
- $ go get http://***REMOVED***/icbs/aws-shib```
+ $ go get github.com/CUBoulder-OIT/aws-shib```
 
 ## Usage
 
@@ -45,43 +45,26 @@ Global Flags:
 ### Configuring your aws config
 
 `aws-shib` assumes that your Shibboleth has already been set up to integrate with AWS (and optionally Duo) such that you can log in with a URL like:
-https://***REMOVED***/idp/profile/SAML2/Unsolicited/SSO?providerId=urn:amazon:webservices
+https://shibboleth.blah.edu/idp/profile/SAML2/
 
 
  You will need to set the default value in your `~/.aws/config` file, for example:
 
 ```ini
 [okta]
-aws_saml_url = https://***REMOVED***/idp/profile/SAML2/Unsolicited/SSO?providerId=urn:amazon:webservices
+aws_saml_url = https://shibboleth.blah.edu/idp/profile/SAML2/
 ```
 
 Next, you need to set up at least one role.    It should be specified like any other aws profile:
 
 ```ini
 [profile shib-sandbox]
-role_arn = arn:aws:iam::***REMOVED***:role/Shibboleth-OIT-SysAdmin
+role_arn = arn:aws:iam::XXXXXXXX:role/SysAdmin
 region = us-west-2
 ```
 
 Your setup may require additional roles to be configured if your admin has set up a more complicated role scheme like cross account roles.  For more details on the authentication process, see the internals section.
 
-#### A more complex example
-
-The `aws_saml_url` can be set in the "okta" ini section, or on a per profile basis. This is useful if, for example, your organization has several Okta Apps (i.e. one for dev/qa and one for prod, or one for internal use and one for integrations with third party providers). For example:
-
-```ini
-[okta]
-# This is the "default" Okta App
-aws_saml_url = home/amazon_aws/cuZGoka9dAIFcyG0UllG/214
-
-[profile dev]
-# This profile uses the default Okta app
-role_arn = arn:aws:iam::<account-id>:role/<okta-role-name>
-
-[profile integrations-auth]
-# This is a distinct Okta App
-aws_saml_url = home/amazon_aws/woezQTbGWUaLSrYDvINU/214
-arn:aws:iam::<account-id>:role/<okta-role-name>
 
 ```
 
