@@ -15,12 +15,12 @@ import (
 	"time"
 
 	"github.com/99designs/keyring"
+	"github.com/CUBoulder-OIT/aws-shib/lib/saml"
 	log "github.com/Sirupsen/logrus"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sts"
 	"golang.org/x/net/publicsuffix"
-	"github.com/CUBoulder-OIT/aws-shib/lib/saml"
 
 	"github.com/anaskhan96/soup"
 )
@@ -75,6 +75,10 @@ func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
 		Jar: jar,
 	}
 
+	if log.GetLevel().String() == "debug" {
+		soup.SetDebug(true)
+	}
+
 	resp, err := soup.GetWithClient(p.OktaAwsSAMLUrl, &client)
 
 	if err != nil {
@@ -82,7 +86,11 @@ func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
 	}
 	log.Debug("Step: 1")
 	doc := soup.HTMLParse(resp)
+	soup.SetDebug(false)
 	sessionInvalid := (doc.FindStrict("input", "name", "SAMLResponse").NodeValue == "")
+	if log.GetLevel().String() == "debug" {
+		soup.SetDebug(true)
+	}
 	log.Debug("Valid Session: " + strconv.FormatBool(!sessionInvalid))
 	var inputs []soup.Root
 	if sessionInvalid {
