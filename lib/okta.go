@@ -108,7 +108,7 @@ func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
 				return sts.Credentials{}, "", errors.New("Failed to get shib credentials from your keyring.  Please make sure you have added shib credentials with `aws-okta add`")
 			}
 		}
-		inputs := doc.FindAll("input")
+		inputs = doc.FindAll("input")
 		payload := url.Values{}
 		for _, input := range inputs {
 			var name = input.Attrs()["name"]
@@ -148,7 +148,11 @@ func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
 		//Duo challenge goes here
 		log.Debug("Step: 2")
 		doc = soup.HTMLParse(string(body))
+		soup.SetDebug(false)
 		var iframe = doc.Find("iframe")
+		if log.GetLevel().String() == "debug" {
+			soup.SetDebug(true)
+		}
 		if iframe.NodeValue != "" {
 			var DuoClient = &DuoClient{
 				Host:       iframe.Attrs()["data-host"],
