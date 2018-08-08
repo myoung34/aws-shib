@@ -7,8 +7,8 @@ This utility uses web scraping to interact with the Shibboleth login screen and 
 
 ## Installing
 ```bash
- $ go get github.com/CUBoulder-OIT/aws-shib```
-
+ $ go get github.com/CUBoulder-OIT/aws-shib
+```
 ## Usage
 
 ### Adding Okta credentials
