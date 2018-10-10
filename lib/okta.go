@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"crypto/tls"
 	"strconv"
 	"strings"
 	"time"
@@ -37,10 +38,11 @@ type OktaCreds struct {
 }
 
 type OktaProvider struct {
-	Keyring         keyring.Keyring
-	ProfileARN      string
-	SessionDuration time.Duration
-	OktaAwsSAMLUrl  string
+	Keyring                keyring.Keyring
+	ProfileARN             string
+	SessionDuration        time.Duration
+	OktaAwsSAMLUrl         string
+	OktaAwsSAMLInsecureTls bool
 }
 
 func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
@@ -71,7 +73,13 @@ func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
 			},
 		})
 	}
+
+	log.Debug("Insecure TLS: " + strconv.FormatBool(p.OktaAwsSAMLInsecureTls))
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: p.OktaAwsSAMLInsecureTls},
+	}
 	client := http.Client{
+		Transport: tr,
 		Jar: jar,
 	}
 
@@ -110,22 +118,8 @@ func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
 		}
 		inputs = doc.FindAll("input")
 		payload := url.Values{}
-		for _, input := range inputs {
-			var name = input.Attrs()["name"]
-			var value = input.Attrs()["value"]
-			if strings.Contains(strings.ToLower(name), "user") {
-				payload.Add(name, oktaCreds.Username)
-			} else if strings.Contains(strings.ToLower(name), "email") {
-				payload.Add(name, oktaCreds.Username)
-			} else if strings.Contains(strings.ToLower(name), "pass") {
-				payload.Add(name, oktaCreds.Password)
-			} else if strings.Contains(strings.ToLower(name), "revoke") {
-				//fmt.Println("Not setting revoke attribute")
-			} else {
-				payload.Add(name, value)
-			}
-		}
-		payload.Add("_eventId_proceed", "")
+		payload.Add("UserName", oktaCreds.Username)
+		payload.Add("Password", oktaCreds.Password)
 
 		formaction := doc.Find("form").Attrs()["action"]
 		idpurl, err := url.Parse(p.OktaAwsSAMLUrl)
@@ -134,7 +128,7 @@ func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
 		}
 		var idpauthformsubmiturl = idpurl.Scheme + "://" + idpurl.Host + formaction
 
-		var resp2, _ = http.PostForm(idpauthformsubmiturl, payload)
+		var resp2, _ = client.PostForm(idpauthformsubmiturl, payload)
 		defer resp2.Body.Close()
 		body, err := ioutil.ReadAll(resp2.Body)
 		cookies := resp2.Cookies()

@@ -40,11 +40,6 @@ func add(cmd *cobra.Command, args []string) error {
 	}
 
 	// Ask username password from prompt
-	organization, err := lib.Prompt("Shib IDP URL for AWS", false)
-	if err != nil {
-		return err
-	}
-
 	username, err := lib.Prompt("Identikey username", false)
 	if err != nil {
 		return err
@@ -57,7 +52,6 @@ func add(cmd *cobra.Command, args []string) error {
 	fmt.Println()
 
 	creds := lib.OktaCreds{
-		Organization: organization,
 		Username:     username,
 		Password:     password,
 	}

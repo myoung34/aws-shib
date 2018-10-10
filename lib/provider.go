@@ -3,6 +3,7 @@ package lib
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -137,15 +138,28 @@ func (p *Provider) getSamlURL(source string) (string, error) {
 	for _, profile := range haystack {
 		oktaAwsSAMLUrl, ok := p.profiles[profile]["aws_saml_url"]
 		if ok {
-			log.Debugf("Using aws_saml_url from profile: %s", profile)
+			log.Debugf("Using aws_saml_url from profile %s: %s", profile, oktaAwsSAMLUrl)
 			return oktaAwsSAMLUrl, nil
 		}
 	}
 	return "", errors.New("aws_saml_url missing from ~/.aws/config")
 }
 
+func (p *Provider) getStrictTls(source string) (bool) {
+	haystack := []string{p.profile, source, "okta"}
+	for _, profile := range haystack {
+		oktaAwsSAMLInsecureTls, err := strconv.ParseBool(p.profiles[profile]["insecure_tls"])
+		if err == nil {
+			log.Debugf("Using insecure_tls from profile %s: %s", profile, strconv.FormatBool(oktaAwsSAMLInsecureTls))
+			return oktaAwsSAMLInsecureTls
+		}
+	}
+	return false
+}
+
 func (p *Provider) getSamlSessionCreds() (sts.Credentials, error) {
 	source := sourceProfile(p.profile, p.profiles)
+	oktaAwsSAMLInsecureTls := p.getStrictTls(source)
 	oktaAwsSAMLUrl, err := p.getSamlURL(source)
 	if err != nil {
 		return sts.Credentials{}, err
@@ -161,6 +175,7 @@ func (p *Provider) getSamlSessionCreds() (sts.Credentials, error) {
 		ProfileARN:      profileARN,
 		SessionDuration: p.SessionDuration,
 		OktaAwsSAMLUrl:  oktaAwsSAMLUrl,
+		OktaAwsSAMLInsecureTls:  oktaAwsSAMLInsecureTls,
 	}
 
 	creds, oktaUsername, err := provider.Retrieve()
