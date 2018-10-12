@@ -116,7 +116,7 @@ func execRun(cmd *cobra.Command, args []string) error {
 		AllowedBackends:          allowedBackends,
 		KeychainTrustApplication: true,
 		// this keychain name is for backwards compatibility
-		ServiceName:             "aws-okta-login",
+		ServiceName:             "aws-shib-login",
 		LibSecretCollectionName: "awsvault",
 	})
 	if err != nil {

@@ -113,7 +113,7 @@ func (p *OktaProvider) Retrieve() (sts.Credentials, string, error) {
 		} else {
 
 			if err = json.Unmarshal(item.Data, &oktaCreds); err != nil {
-				return sts.Credentials{}, "", errors.New("Failed to get shib credentials from your keyring.  Please make sure you have added shib credentials with `aws-okta add`")
+				return sts.Credentials{}, "", errors.New("Failed to get shib credentials from your keyring.  Please make sure you have added shib credentials with `aws-shib add`")
 			}
 		}
 		inputs = doc.FindAll("input")

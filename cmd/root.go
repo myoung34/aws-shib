@@ -27,8 +27,8 @@ var (
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:              "aws-okta",
-	Short:            "aws-okta allows you to authenticate with AWS using your okta credentials",
+	Use:              "aws-shib",
+	Short:            "aws-shib allows you to authenticate with AWS using your adfs credentials",
 	SilenceUsage:     true,
 	SilenceErrors:    true,
 	PersistentPreRun: prerun,

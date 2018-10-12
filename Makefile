@@ -5,26 +5,26 @@ release: gh-release govendor clean dist
 	github-release release \
 	--security-token $$GH_LOGIN \
 	--user segmentio \
-	--repo aws-okta \
+	--repo aws-shib \
 	--tag $(VERSION) \
 	--name $(VERSION)
 
 	github-release upload \
 	--security-token $$GH_LOGIN \
 	--user segmentio \
-	--repo aws-okta \
+	--repo aws-shib \
 	--tag $(VERSION) \
-	--name aws-okta-$(VERSION)-linux-amd64 \
-	--file dist/aws-okta-$(VERSION)-linux-amd64
+	--name aws-shib-$(VERSION)-linux-amd64 \
+	--file dist/aws-shib-$(VERSION)-linux-amd64
 
 release-mac: gh-release govendor clean dist-mac
 	github-release upload \
 	--security-token $$GH_LOGIN \
 	--user segmentio \
-	--repo aws-okta \
+	--repo aws-shib \
 	--tag $(VERSION) \
-	--name aws-okta-$(VERSION)-darwin-amd64 \
-	--file dist/aws-okta-$(VERSION)-darwin-amd64
+	--name aws-shib-$(VERSION)-darwin-amd64 \
+	--file dist/aws-shib-$(VERSION)-darwin-amd64
 
 clean:
 	rm -rf ./dist

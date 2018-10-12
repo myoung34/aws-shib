@@ -19,6 +19,6 @@ func init() {
 }
 
 func versionRun(cmd *cobra.Command, args []string) error {
-	fmt.Fprintf(os.Stdout, "aws-okta %s\n", version)
+	fmt.Fprintf(os.Stdout, "aws-shib %s\n", version)
 	return nil
 }
